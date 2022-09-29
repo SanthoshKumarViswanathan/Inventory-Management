@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inventory Management</title>
+    <!-- title icon -->
+    <link rel="icon" href="https://spng.pinpng.com/pngs/s/244-2447708_alia-instruments-b-blue-inventory-icon-png-transparent.png" 
+        type="image/gif"> 
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome Icons -->
+  <link rel="icon" href="https://spng.pinpng.com/pngs/s/244-2447708_alia-instruments-b-blue-inventory-icon-png-transparent.png" 
+        type="image/gif"> 
+  <link rel="stylesheet" href="plugins/toastr/toastr.min.css">
+  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="plugins/toastr/toastr.min.css">
+  <!-- Datatable -->
+  <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+  <link rel="stylesheet" href="plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+   
+  <link rel="stylesheet" href="dist/css/adminlte.min.css">
+</head>
+
+<style>
+    @media only screen and (max-width: 1200px) {
+  #my-card {
+    width: auto !important;   
+  }
+  #btn-edit
+  {
+    margin-bottom: .5rem;
+  }
+}
+
+#btn-add{
+  margin-right: .5rem;
+}
+</style>
+
+<body class="hold-transition dark-mode">
+
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          
+          <div class="col-sm-6">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/" class="text-light">Login</a></li>
+              <li class="breadcrumb-item active">Dashboard</li>
+            </ol>
+          </div>
+          <!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+
+        <div class="container-fluid">
+     
+       
+            <div class="row">
+           
+                <div class="col-md-12">
+                    <!-- MAP & BOX PANE -->
+                    <div class="card card-outline card-light mx-auto collapsed-card" id="my-card" style="width: 70rem;" >
+
+                    <div class="card-header">
+                        <h3 class="card-title" id="card-heading">Inventory Details</h3>
+
+                        <div class="card-tools">
+
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body p-2">
+
+                        <form id="form-id">
+                            <input type="hidden" id="update-id">
+                            <div class="form-row">
+                              <div class="form-group col-md-6">
+                                <label for="employeeCode">Employee Code</label>
+                                <input type="text" class="form-control" id="text-employeeCode" name="employeeCode" value="EMP-">
+                              </div>
+                              <div class="form-group col-md-6">
+                                <label for="employeeName">Employee Name</label>
+                                <input type="text" class="form-control" id="text-employeeName" name="employeeName">
+                              </div>
+                            </div>
+
+                            <div class="form-row">
+                              <div class="form-group col-md-6">
+                                <label for="systemInfo">System Information</label>
+                                <input type="text" class="form-control" id="text-systemInfo" name="systemInfo">
+                              </div>
+                              <div class="form-group col-md-6">
+                                <label for="headphone">Headphone</label>
+                                <input type="text" class="form-control" id="text-headphoneInfo" name="headphone">
+                              </div>
+                            </div>
+
+                            <div class="form-row">
+                              <div class="form-group col-md-4">
+                                <label for="keyboard">Keyboard</label>
+                                <input type="text" class="form-control" id="text-keyboardInfo" name="keyboard">
+                              </div>
+                              <div class="form-group col-md-4">
+                                <label for="mouse">Mouse</label>
+                                <input type="text" class="form-control" id="text-mouseInfo" name="mouse">
+                              </div>
+                              <div class="form-group col-md-4">
+                                <label for="stand">Laptop Stand</label>
+                                <input type="text" class="form-control" id="text-laptopStand" name="stand">
+                              </div>
+                            </div>                            
+                            <div class="mt-3 d-flex justify-content-end">
+                              <button type="submit" class="btn btn-light" id="btn-add">Add</button>
+                              <button type="reset" class="btn btn-secondary" id="btn-cancel" onclick="resetForm()">Cancel</button>
+                            </div>
+
+
+                          </form>
+
+                    </div>
+                    <!-- /.card-body -->
+                    </div>
+                
+                    <!-- TABLE: LATEST ORDERS -->
+                 
+                    <!-- /.card -->
+                </div>
+        
+            </div>
+        <!-- /.row -->
+        </div><!--/. container-fluid -->
+
+    </section>
+
+    <div class="modal fade" id="modal-default">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Delete Confirmation</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you can Delete this Data?</p>
+          </div>
+          <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+            <button type="button" class="btn btn-primary" id="save-btn" onclick="onDelete()">Yes</button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+
+    <section class="content">
+
+        <div class="container">
+
+            <div class="row mt-3">
+
+                <div class="col-md-12">
+
+                  <table class="table table-bordered mt-5" id="table-id">
+
+                    <thead class="thead-light">
+                      <tr>
+                        <th scope="col">Employee Code</th>
+                        <th scope="col">Employee Name</th>
+                        <th scope="col">System Details</th>
+                        <th scope="col">Headphone</th>
+                        <th scope="col">Keyboard</th>
+                        <th scope="col">Mouse</th>
+                        <th scope="col">Laptop Stand</th>                            
+                        <th scope="col">Action</th>                            
+                      </tr>
+                    </thead>
+
+                    <tbody id="table-body">
+
+                    </tbody>
+
+                  </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    
+
+<!-- jQuery -->
+<script src="plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Jquery Datatable -->
+<script src="plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<!-- Bootstrap Datatable -->
+<script src="plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<!-- Datatable Buttons -->
+<!-- <script src="plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="plugins/jszip/jszip.min.js"></script>
+<script src="plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="plugins/datatables-buttons/js/buttons.colVis.min.js"></script> -->
+<!-- jquery-validation -->
+<script src="plugins/jquery-validation/jquery.validate.min.js"></script>
+<script src="plugins/jquery-validation/additional-methods.min.js"></script>
+<!-- toastr -->
+<script src="plugins/toastr/toastr.min.js"></script>
+<!-- Static Js -->
+<script src="dist/js/adminlte.js"></script>
+<script src="dist/js/main.js"></script>
+<script src="dist/js/index.js"></script>
+
+<script>
+  $(function () {
+   
+    $.validator.setDefaults({
+      submitHandler: function () {
+        if($("#update-id").val()=="")
+    {
+       
+        alert("add");
+        addDetails();
+       
+    }
+    else{
+       
+        alert("update");
+        alert($("#update-id").val());
+        updateEmployee($("#update-id").val());
+    }
+        
+        // alert( "Form successful submitted!" );
+      }
+    });
+    $('#form-id').validate({
+
+      rules: {
+
+        employeeCode: {
+          required: true,
+          minlength: 5
+        },
+        employeeName: {
+          required: true,
+          minlength: 5
+        },
+        systemInfo: {
+          required: true,
+          minlength: 2
+        },
+        headphone: {
+          required: true,
+          minlength: 2
+        },
+        keyboard: {
+          required: true,
+          minlength: 2
+        },
+        mouse: {
+          required: true,
+          minlength: 2
+        },
+        stand: {
+          required: true,
+          minlength: 2
+        },
+      },
+      messages: {
+        employeeCode: {
+          required: "Please enter the Employee Code",
+          minlength: "Employee Code must be atleast 5 characters long"
+        },
+        employeeName: {
+          required: "Please provide full name",
+          minlength: "Employee name must be at least 5 characters long"
+        },
+        systemInfo: {
+          required: "Please provide full name",
+          minlength: "Employee name must be at least 5 characters long"
+        },
+        headphone: {
+          required: "Please provide full name",
+          minlength: "Type NA if you don't have Headphone"
+        },
+        keyboard: {
+          required: "Please provide full name",
+          minlength: "Type NA if you don't have Keyboard"
+        },
+        mouse: {
+          required: "Please provide full name",
+          minlength: "Type NA if you don't have Mouse"
+        },
+        stand: {
+          required: "Please provide full name",
+          minlength: "Type NA if you don't have Laptop Stand"
+        },
+      },
+      errorElement: 'span',
+      errorPlacement: function (error, element) {
+        error.addClass('invalid-feedback');
+        element.closest('.form-group').append(error);
+      },
+      highlight: function (element, errorClass, validClass) {
+        $(element).addClass('is-invalid');
+      },
+      unhighlight: function (element, errorClass, validClass) {
+        $(element).removeClass('is-invalid');
+      }
+    });
+  });
+  </script>
+
+</body>
+</html>
